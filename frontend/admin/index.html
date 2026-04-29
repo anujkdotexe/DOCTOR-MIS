@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — DocFind</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .admin-layout { min-height: calc(100vh - 68px); }
+  </style>
+</head>
+<body data-admin-page="dashboard">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-brand">
+        <div class="navbar-logo">🏥</div>
+        <span class="navbar-title">Doc<span>Find</span> <span style="font-size:0.7em;color:var(--secondary);margin-left:4px">Admin</span></span>
+      </a>
+      <div class="navbar-auth" style="display:flex;align-items:center;gap:12px">
+        <span class="navbar-user" id="admin-user-label">Admin</span>
+        <button class="btn btn-sm btn-outline" onclick="logout()" style="color:#FDEBD0;border-color:#FDEBD0">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-title">Navigation</div>
+    <ul class="admin-nav">
+      <li><a href="index.html" class="active"><span>📊</span> Dashboard</a></li>
+      <li><a href="doctors.html"><span>🩺</span> Manage Doctors</a></li>
+      <li><a href="appointments.html"><span>📅</span> Appointments</a></li>
+      <li><a href="../index.html"><span>🔍</span> View Site</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+    <div class="admin-page-title">
+      <div>
+        <h2>Dashboard Overview</h2>
+        <p>Welcome back! Here's what's happening today.</p>
+      </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-cards">
+      <div class="stat-card">
+        <div class="stat-card-icon blue">🩺</div>
+        <div>
+          <div class="stat-val" id="stat-doctors">—</div>
+          <div class="stat-lbl">Total Doctors</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon orange">📅</div>
+        <div>
+          <div class="stat-val" id="stat-appointments">—</div>
+          <div class="stat-lbl">Total Appointments</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon yellow">⏳</div>
+        <div>
+          <div class="stat-val" id="stat-pending">—</div>
+          <div class="stat-lbl">Pending</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon teal">✅</div>
+        <div>
+          <div class="stat-val" id="stat-confirmed">—</div>
+          <div class="stat-lbl">Confirmed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT DOCTORS TABLE -->
+    <div class="admin-table-wrap" style="margin-bottom:28px">
+      <div class="admin-table-header">
+        <h3>🩺 Recent Doctors</h3>
+        <a href="doctors.html" class="btn btn-sm btn-outline">View All</a>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Photo</th><th>Name</th><th>Specialization</th><th>City</th><th>Rating</th>
+          </tr>
+        </thead>
+        <tbody id="recent-doctors-body">
+          <tr><td colspan="5" style="text-align:center;padding:24px">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- RECENT APPOINTMENTS TABLE -->
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <h3>📅 Recent Appointments</h3>
+        <a href="appointments.html" class="btn btn-sm btn-outline">View All</a>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="recent-appt-body">
+          <tr><td colspan="4" style="text-align:center;padding:24px">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/api.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

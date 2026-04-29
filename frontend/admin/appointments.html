@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointments — DocFind Admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-admin-page="appointments">
+
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-brand">
+        <div class="navbar-logo">🏥</div>
+        <span class="navbar-title">Doc<span>Find</span> <span style="font-size:0.7em;color:var(--secondary);margin-left:4px">Admin</span></span>
+      </a>
+      <div class="navbar-auth" style="display:flex;align-items:center;gap:12px">
+        <span class="navbar-user" id="admin-user-label">Admin</span>
+        <button class="btn btn-sm btn-outline" onclick="logout()" style="color:#FDEBD0;border-color:#FDEBD0">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-title">Navigation</div>
+    <ul class="admin-nav">
+      <li><a href="index.html"><span>📊</span> Dashboard</a></li>
+      <li><a href="doctors.html"><span>🩺</span> Manage Doctors</a></li>
+      <li><a href="appointments.html" class="active"><span>📅</span> Appointments</a></li>
+      <li><a href="../index.html"><span>🔍</span> View Site</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-page-title">
+      <div>
+        <h2>All Appointments</h2>
+        <p>View and manage patient appointment bookings.</p>
+      </div>
+      <select id="appt-status-filter" style="padding:10px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);font-size:0.88rem;color:var(--text);cursor:pointer;outline:none">
+        <option value="">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+
+    <div class="admin-table-wrap">
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Date & Time</th>
+              <th>City</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appt-table-body">
+            <tr><td colspan="7" style="text-align:center;padding:32px">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" id="appt-pagination" style="padding:16px;justify-content:center"></div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/api.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

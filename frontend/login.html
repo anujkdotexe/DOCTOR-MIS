@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — DocFind</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🏥</div>
+      <div class="auth-logo-text">Doc<span>Find</span></div>
+    </div>
+    <div class="auth-title">
+      <h2>Welcome back 👋</h2>
+      <p>Login to manage your appointments</p>
+    </div>
+
+    <div class="error-msg" id="form-error">
+      <span id="error-text"></span>
+    </div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div style="position:relative">
+          <input type="password" name="password" id="password-input" placeholder="Your password" required autocomplete="current-password">
+          <button type="button" onclick="togglePwd()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.1rem;background:none;border:none;cursor:pointer;color:var(--text-muted)" id="eye-btn">👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit-btn" style="margin-top:8px">
+        Login
+      </button>
+    </form>
+
+    <div class="auth-divider">or continue with</div>
+
+    <div style="background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;font-size:0.82rem;color:var(--text-muted)">
+      <strong style="display:block;margin-bottom:6px;color:var(--text)">🔑 Test Credentials</strong>
+      <div>Admin: <code style="color:var(--primary)">admin@docfind.com</code> / <code style="color:var(--primary)">Password@123</code></div>
+      <div style="margin-top:4px">User: <code style="color:var(--primary)">rahul@example.com</code> / <code style="color:var(--primary)">Password@123</code></div>
+    </div>
+
+    <div class="auth-switch">
+      Don't have an account? <a href="register.html">Register here</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script>
+  if (API.isLoggedIn()) location.href = 'index.html';
+
+  let showPwd = false;
+  function togglePwd() {
+    showPwd = !showPwd;
+    document.getElementById('password-input').type = showPwd ? 'text' : 'password';
+    document.getElementById('eye-btn').textContent  = showPwd ? '🙈' : '👁️';
+  }
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn   = document.getElementById('submit-btn');
+    const errEl = document.getElementById('form-error');
+    const errTx = document.getElementById('error-text');
+    errEl.classList.remove('show');
+    btn.disabled    = true;
+    btn.textContent = 'Logging in…';
+
+    const { email, password } = Object.fromEntries(new FormData(e.target));
+    try {
+      const res = await API.login({ email, password });
+      API.setSession(res.token, res.user);
+      showToast(`Welcome back, ${res.user.name.split(' ')[0]}!`, 'success');
+      setTimeout(() => {
+        location.href = res.user.role === 'admin' ? 'admin/index.html' : 'index.html';
+      }, 800);
+    } catch (err) {
+      errTx.textContent = err.message;
+      errEl.classList.add('show');
+      btn.disabled    = false;
+      btn.textContent = 'Login';
+    }
+  });
+</script>
+</body>
+</html>

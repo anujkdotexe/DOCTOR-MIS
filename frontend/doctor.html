@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Profile — DocFind</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">
+        <div class="navbar-logo">🏥</div>
+        <span class="navbar-title">Doc<span>Find</span></span>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="index.html">Find Doctors</a></li>
+        <li><a href="appointment.html">Book Appointment</a></li>
+      </ul>
+      <div class="navbar-auth" id="nav-auth"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div style="background:var(--surface);border-bottom:1px solid var(--border-light);padding:12px 0">
+  <div class="container" style="font-size:0.82rem;color:var(--text-muted)">
+    <a href="index.html" style="color:var(--primary)">Home</a> › 
+    <a href="index.html" style="color:var(--primary)">Doctors</a> › 
+    <span id="breadcrumb-name">Loading…</span>
+  </div>
+</div>
+
+<!-- DETAIL HERO -->
+<section class="detail-hero" id="detail-hero">
+  <div class="container">
+    <div class="detail-hero-card" id="hero-card">
+      <div class="spinner-wrap" style="padding:40px"><div class="spinner" style="border-top-color:#fff"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DETAIL BODY -->
+<main class="container" style="padding:48px 0">
+  <div class="detail-body" id="detail-body">
+    <div>
+      <!-- About -->
+      <div class="detail-card" id="card-about"></div>
+      <!-- Schedule -->
+      <div class="detail-card" id="card-schedule"></div>
+    </div>
+    <!-- Sidebar -->
+    <div>
+      <div class="detail-card" id="card-contact"></div>
+      <div class="detail-card" id="card-book" style="text-align:center"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 DocFind.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  updateNavbar();
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) { showToast('Doctor ID not found.', 'error'); return; }
+
+  try {
+    const { data: d } = await API.getDoctor(id);
+    document.title = `${d.name} — DocFind`;
+    document.getElementById('breadcrumb-name').textContent = d.name;
+
+    const fee    = d.consultation_fee === 0 ? '<span style="color:var(--accent);font-weight:700">FREE</span>' : `₹${d.consultation_fee}`;
+    const expBand= d.experience_years <= 5 ? 'Junior' : d.experience_years <= 15 ? 'Mid-level' : 'Senior';
+
+    document.getElementById('hero-card').innerHTML = `
+      <img src="${d.photo_url || ''}" alt="${d.name}" class="detail-avatar"
+           onerror="this.outerHTML='<div class=detail-avatar style=background:linear-gradient(135deg,var(--primary-light),var(--accent));display:flex;align-items:center;justify-content:center;font-size:4rem>${specIcon(d.specialization)}</div>'">
+      <div class="detail-hero-info" style="flex:1">
+        <h1>${d.name}</h1>
+        <div class="detail-specialty-tag">${specIcon(d.specialization)} ${d.specialization}</div>
+        <div class="detail-meta-row">
+          <div class="detail-meta-item">🏥 ${d.hospital}</div>
+          <div class="detail-meta-item">📍 ${d.city}</div>
+          <div class="detail-meta-item">
+            <span style="color:var(--accent)">${renderStars(parseFloat(d.rating))}</span>
+            <strong style="color:#FDEBD0;margin-left:4px">${d.rating}</strong>
+          </div>
+          <div class="detail-meta-item">🩺 ${d.experience_years} yrs (${expBand})</div>
+        </div>
+        <div class="detail-hero-actions">
+          <a href="appointment.html?id=${d.id}" class="btn btn-primary btn-lg">📅 Book Appointment</a>
+          <a href="tel:${d.phone}" class="btn btn-outline" style="color:#FDEBD0;border-color:#FDEBD0">📞 Call Now</a>
+        </div>
+      </div>`;
+
+    document.getElementById('card-about').innerHTML = `
+      <h3>About Doctor</h3>
+      <p style="font-size:0.95rem;color:var(--text);line-height:1.8">${d.bio || 'No biography available.'}</p>
+      <div class="info-grid" style="margin-top:20px">
+        <div class="info-item"><label>Specialization</label><p>${d.specialization}</p></div>
+        <div class="info-item"><label>Experience</label><p>${d.experience_years} years (${expBand})</p></div>
+        <div class="info-item"><label>Hospital</label><p>${d.hospital}</p></div>
+        <div class="info-item"><label>City</label><p>${d.city}</p></div>
+        <div class="info-item"><label>Rating</label><p><span style="color:var(--accent)">${renderStars(parseFloat(d.rating))}</span> ${d.rating} / 5.0</p></div>
+        <div class="info-item"><label>Consultation Fee</label><p>${fee}</p></div>
+      </div>`;
+
+    document.getElementById('card-schedule').innerHTML = `
+      <h3>Schedule</h3>
+      <div class="info-grid">
+        <div class="info-item"><label>Available Days</label><p>${d.available_days || '—'}</p></div>
+        <div class="info-item"><label>Timings</label><p>${d.available_time || '—'}</p></div>
+      </div>`;
+
+    document.getElementById('card-contact').innerHTML = `
+      <h3>Contact</h3>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card-info-row" style="font-size:0.92rem">📞 <a href="tel:${d.phone}" style="color:var(--primary)">${d.phone || '—'}</a></div>
+        <div class="card-info-row" style="font-size:0.92rem">✉️ <a href="mailto:${d.email}" style="color:var(--primary)">${d.email || '—'}</a></div>
+        <div class="card-info-row" style="font-size:0.92rem">🏥 ${d.hospital}</div>
+        <div class="card-info-row" style="font-size:0.92rem">📍 ${d.city}</div>
+      </div>`;
+
+    document.getElementById('card-book').innerHTML = `
+      <div style="font-size:3rem;margin-bottom:12px">📅</div>
+      <h3 style="margin-bottom:8px">Ready to consult?</h3>
+      <p style="margin-bottom:20px">Book a slot with ${d.name.split(' ').slice(0,2).join(' ')} in seconds.</p>
+      <a href="appointment.html?id=${d.id}" class="btn btn-primary btn-block btn-lg">Book Appointment</a>
+      <div style="margin-top:16px;font-size:0.8rem;color:var(--text-muted)">
+        Consultation: <strong>${fee}</strong>
+      </div>`;
+
+  } catch (err) {
+    document.getElementById('hero-card').innerHTML =
+      `<div style="color:#fff;text-align:center;width:100%">⚠️ ${err.message}</div>`;
+  }
+});
+</script>
+</body>
+</html>

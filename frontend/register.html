@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — DocFind</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🏥</div>
+      <div class="auth-logo-text">Doc<span>Find</span></div>
+    </div>
+    <div class="auth-title">
+      <h2>Create your account</h2>
+      <p>Book appointments with top doctors</p>
+    </div>
+
+    <div class="error-msg" id="form-error">
+      <span id="error-text"></span>
+    </div>
+
+    <form id="register-form" novalidate>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Dr. / Mr. / Ms. Full Name" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div style="position:relative">
+          <input type="password" name="password" id="password-input" placeholder="Minimum 6 characters" required autocomplete="new-password">
+          <button type="button" onclick="togglePwd()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.1rem;background:none;border:none;cursor:pointer;color:var(--text-muted)" id="eye-btn">👁️</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" id="confirm-input" placeholder="Re-enter password" required autocomplete="new-password">
+      </div>
+
+      <!-- Password strength indicator -->
+      <div style="margin-top:-12px;margin-bottom:16px">
+        <div style="height:4px;background:var(--border-light);border-radius:4px;overflow:hidden">
+          <div id="pwd-strength-bar" style="height:100%;width:0%;transition:width 0.3s,background 0.3s;border-radius:4px"></div>
+        </div>
+        <span id="pwd-strength-label" style="font-size:0.75rem;color:var(--text-muted)"></span>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit-btn">
+        Create Account
+      </button>
+    </form>
+
+    <div class="auth-switch">
+      Already have an account? <a href="login.html">Login here</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script>
+  if (API.isLoggedIn()) location.href = 'index.html';
+
+  let showPwd = false;
+  function togglePwd() {
+    showPwd = !showPwd;
+    document.getElementById('password-input').type = showPwd ? 'text' : 'password';
+    document.getElementById('confirm-input').type   = showPwd ? 'text' : 'password';
+    document.getElementById('eye-btn').textContent  = showPwd ? '🙈' : '👁️';
+  }
+
+  document.getElementById('password-input').addEventListener('input', (e) => {
+    const val  = e.target.value;
+    const bar  = document.getElementById('pwd-strength-bar');
+    const lbl  = document.getElementById('pwd-strength-label');
+    let strength = 0;
+    if (val.length >= 6)                           strength++;
+    if (/[A-Z]/.test(val))                         strength++;
+    if (/[0-9]/.test(val))                         strength++;
+    if (/[^A-Za-z0-9]/.test(val))                  strength++;
+    const levels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    const colors = ['', '#E63946', '#FF6B35', '#F9C74F', '#2EC4B6'];
+    bar.style.width      = `${strength * 25}%`;
+    bar.style.background = colors[strength] || '';
+    lbl.textContent      = levels[strength] || '';
+  });
+
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn   = document.getElementById('submit-btn');
+    const errEl = document.getElementById('form-error');
+    const errTx = document.getElementById('error-text');
+    errEl.classList.remove('show');
+
+    const { name, email, password, confirm_password } = Object.fromEntries(new FormData(e.target));
+
+    if (password !== confirm_password) {
+      errTx.textContent = 'Passwords do not match.';
+      errEl.classList.add('show');
+      return;
+    }
+    if (password.length < 6) {
+      errTx.textContent = 'Password must be at least 6 characters.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = 'Creating account…';
+
+    try {
+      const res = await API.register({ name, email, password });
+      API.setSession(res.token, res.user);
+      showToast(`Welcome, ${res.user.name.split(' ')[0]}! 🎉`, 'success');
+      setTimeout(() => location.href = 'index.html', 900);
+    } catch (err) {
+      errTx.textContent = err.message;
+      errEl.classList.add('show');
+      btn.disabled    = false;
+      btn.textContent = 'Create Account';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocFind — Find the Best Doctors Near You</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">
+        <div class="navbar-logo">🏥</div>
+        <span class="navbar-title">Doc<span>Find</span></span>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="index.html" class="active">Find Doctors</a></li>
+        <li><a href="appointment.html">Book Appointment</a></li>
+      </ul>
+      <div class="navbar-auth" id="nav-auth"></div>
+      <button class="navbar-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container hero-content">
+    <div class="hero-eyebrow">🇮🇳 India's Doctor Search Platform</div>
+    <h1>Find the Right Doctor,<br>Book in Seconds</h1>
+    <p class="hero-sub">Search from 55+ verified doctors across 10 cities, 12 specializations, and top hospital chains.</p>
+
+    <div class="hero-search-box">
+      <span style="font-size:1.2rem">🔍</span>
+      <input type="text" id="hero-search" placeholder="Search by doctor name or hospital…" oninput="onHeroSearch(this.value)" autocomplete="off">
+      <select id="filter-spec" onchange="applyFilters()">
+        <option value="">All Specializations</option>
+      </select>
+      <select id="filter-city" onchange="applyFilters()">
+        <option value="">All Cities</option>
+      </select>
+      <button class="btn btn-primary" onclick="applyFilters()">Search</button>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">55+</span>
+        <span class="hero-stat-label">Verified Doctors</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">12</span>
+        <span class="hero-stat-label">Specializations</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">10</span>
+        <span class="hero-stat-label">Cities</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">∞</span>
+        <span class="hero-stat-label">Free Booking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPECIALTY CHIP FILTER BAR ===== -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-chips" id="specialty-chips">
+      <button class="chip active" onclick="clearChips()">
+        <span class="chip-icon">🏥</span> All
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="section" style="padding-top:40px">
+  <div class="container">
+
+    <!-- Advanced Filters Panel -->
+    <div class="filters-panel">
+      <div class="filter-group">
+        <label>Doctor / Hospital</label>
+        <input type="text" id="search-name" placeholder="e.g. Apollo, Arjun…" oninput="onHeroSearch(this.value)">
+      </div>
+      <div class="filter-group">
+        <label>Hospital</label>
+        <input type="text" id="filter-hospital" placeholder="e.g. Fortis, AIIMS…">
+      </div>
+      <div class="filter-group">
+        <label>Min Rating</label>
+        <select id="filter-rating">
+          <option value="">Any Rating</option>
+          <option value="3.0">3.0+</option>
+          <option value="3.5">3.5+</option>
+          <option value="4.0">4.0+</option>
+          <option value="4.5">4.5+</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Experience</label>
+        <select id="filter-exp">
+          <option value="">Any Experience</option>
+          <option value="junior">Junior (0–5 yrs)</option>
+          <option value="mid">Mid-level (6–15 yrs)</option>
+          <option value="senior">Senior (16+ yrs)</option>
+        </select>
+      </div>
+      <div class="filter-group" style="display:flex;gap:10px;align-items:flex-end">
+        <button class="btn btn-primary" onclick="applyFilters()" style="flex:1">Apply</button>
+        <button class="btn btn-outline" onclick="clearFilters()">Clear</button>
+      </div>
+    </div>
+
+    <!-- Results Header -->
+    <div class="section-header">
+      <div>
+        <span class="section-label">Results</span>
+        <h2 style="margin:0">Available Doctors</h2>
+      </div>
+      <span class="results-count" id="results-count">Loading…</span>
+    </div>
+
+    <!-- Doctor Cards Grid -->
+    <div class="doctors-grid" id="doctors-grid">
+      <div class="spinner-wrap"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-text">Doc<span>Find</span></div>
+        <p class="footer-desc">India's trusted doctor search and appointment platform. Find verified specialists across top cities and hospitals.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Find Doctors</a></li>
+          <li><a href="appointment.html">Book Appointment</a></li>
+          <li><a href="login.html">Patient Login</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Specializations</h4>
+        <ul>
+          <li><a href="index.html?spec=Cardiologist">Cardiologist</a></li>
+          <li><a href="index.html?spec=Dermatologist">Dermatologist</a></li>
+          <li><a href="index.html?spec=Neurologist">Neurologist</a></li>
+          <li><a href="index.html?spec=Pediatrician">Pediatrician</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Top Cities</h4>
+        <ul>
+          <li><a href="index.html?city=Mumbai">Mumbai</a></li>
+          <li><a href="index.html?city=Delhi">Delhi</a></li>
+          <li><a href="index.html?city=Bangalore">Bangalore</a></li>
+          <li><a href="index.html?city=Hyderabad">Hyderabad</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 DocFind. Built for Hackveda Full Stack Task.</p>
+      <p>Designed with ❤️ using Node.js + MySQL</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+<div id="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script>
+  /* Handle URL params for deep-linking (e.g. from footer) */
+  const _urlParams = new URLSearchParams(location.search);
+  if (_urlParams.get('spec')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const specSel = document.getElementById('filter-spec');
+      if (specSel) { specSel.value = _urlParams.get('spec'); applyFilters(); }
+    });
+  }
+  if (_urlParams.get('city')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const citySel = document.getElementById('filter-city');
+      if (citySel) { citySel.value = _urlParams.get('city'); applyFilters(); }
+    });
+  }
+
+  function clearChips() {
+    document.querySelectorAll('#specialty-chips .chip').forEach(c => c.classList.remove('active'));
+    document.querySelector('#specialty-chips .chip').classList.add('active');
+    delete activeFilters?.specialization;
+    document.getElementById('filter-spec').value = '';
+    currentPage = 1;
+    loadDoctors();
+  }
+
+  function toggleMobileNav() {
+    const links = document.querySelector('.navbar-links');
+    links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+    links.style.flexDirection = 'column';
+    links.style.position = 'absolute';
+    links.style.top = '68px';
+    links.style.right = '20px';
+    links.style.background = 'var(--primary-dark)';
+    links.style.border = '1px solid rgba(255,255,255,0.1)';
+    links.style.borderRadius = '12px';
+    links.style.padding = '12px';
+  }
+</script>
+</body>
+</html>
