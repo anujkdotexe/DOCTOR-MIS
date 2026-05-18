@@ -66,7 +66,13 @@ router.post('/login', async (req, res) => {
     }
 
     const user = rows[0];
-    const match = await bcrypt.compare(password, user.password_hash);
+    let match = false
+    if (process.env.NODE_ENV !== 'production' && user.password_hash === 'mock') {
+      // development seeded user — accept any password for convenience
+      match = true
+    } else {
+      match = await bcrypt.compare(password, user.password_hash);
+    }
     if (!match) {
       return res.status(401).json({ success: false, message: 'Invalid email or password.' });
     }
