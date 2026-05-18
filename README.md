@@ -1,18 +1,19 @@
 # DOCTOR MIS
 
-Doctor MIS (Management Information System) is a full-stack application for managing doctors, appointments, and related administrative tasks. It features a Node.js backend and a modern frontend for both users and administrators.
+Doctor MIS (Management Information System) is a full-stack application for managing doctors, appointments, and related administrative tasks. It features a Node.js backend and a modern React frontend for both users and administrators.
 
 ## Features
-- User registration and authentication
+- Combined login/register auth page
 - Doctor management
 - Appointment scheduling
 - Admin dashboard
 - Secure API endpoints
+- Client-side admin route protection
 
 ## Project Structure
 ```
 backend/    # Node.js backend (Express, database, API routes)
-frontend/   # HTML, CSS, JS frontend (user and admin interfaces)
+frontend-react/   # React + Vite frontend (user and admin interfaces)
 ```
 
 ## Getting Started
@@ -25,12 +26,32 @@ frontend/   # HTML, CSS, JS frontend (user and admin interfaces)
    cd backend
    npm install
    ```
-3. Set up environment variables in `backend/.env`.
-4. Start the backend server:
+3. Install frontend dependencies:
+   ```sh
+   cd ..\frontend-react
+   npm install
+   ```
+4. Set up environment variables in `backend/.env`.
+5. Start the backend server:
    ```sh
    npm start
    ```
-5. Open `frontend/index.html` in your browser for the user interface.
+6. Start the frontend:
+   ```sh
+   cd ..\frontend-react
+   npm run dev
+   ```
+
+## Database Seeding
+- Run `backend/database/schema.sql` first.
+- Seed an admin user with either:
+  - `npm run seed:admin` from the `backend/` folder after setting DB env vars, or
+  - `backend/database/seed_admin.sql` for manual import.
+
+## Frontend Notes
+- Login and Register now live on a single `/auth` page with tabs.
+- The `/admin` route is protected on the client and redirects non-admin users.
+- Appointment booking supports doctor preselection from the Doctors page.
 
 ## License
 See LICENSE for details. This project is proprietary to Anuj Kondawar.

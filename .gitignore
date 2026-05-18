@@ -76,3 +76,4 @@ frontend/node_modules/
 # IDE files
 .idea/
 *.iml
+backend/database/seed_admin.sql

@@ -5,7 +5,7 @@ const cors    = require('cors');
 const authRouter         = require('./routes/auth');
 const doctorsRouter      = require('./routes/doctors');
 const appointmentsRouter = require('./routes/appointments');
-const devRouter = require('./routes/dev');
+// dev routes removed for production readiness
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -31,7 +31,6 @@ app.get('/', (req, res) => {
 app.use('/api/auth',         authRouter);
 app.use('/api/doctors',      doctorsRouter);
 app.use('/api/appointments', appointmentsRouter);
-app.use('/api/_dev', devRouter);
 
 // ---------------------------------------------------------------
 // 404 handler
