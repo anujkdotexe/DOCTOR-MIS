@@ -19,7 +19,10 @@ button{cursor:pointer}
 .app-root{min-height:100vh;display:flex;flex-direction:column}
 .site-header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 28px;background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border-bottom:1px solid rgba(229,231,235,.8)}
 .brand-block{display:flex;flex-direction:column;gap:2px}
-.site-header h1{margin:0;font-size:20px;color:var(--accent);letter-spacing:0.3px}
+.site-header h1{margin:0;font-size:20px;letter-spacing:0.3px}
+.site-header h1 a{display:inline-flex;align-items:center;gap:10px;color:var(--accent);text-decoration:none}
+.brand-mark{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 10px 24px rgba(0,102,204,.25);flex:0 0 auto}
+.brand-mark svg{width:24px;height:24px;display:block}
 .brand-subtitle{margin:0;font-size:12px}
 .site-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .site-header nav a,.nav-link{padding:10px 14px;border-radius:999px;color:#0f172a;text-decoration:none;font-weight:600;border:1px solid transparent;background:transparent}

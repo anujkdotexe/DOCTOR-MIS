@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { fetchDoctors, bookAppointment } from '../api'
 
 export default function Appointments(){
-  const [searchParams] = useSearchParams()
+  const location = useLocation()
+  const doctorIdFromQuery = useMemo(() => new URLSearchParams(location.search).get('doctor') || '', [location.search])
   const [doctors, setDoctors] = useState([])
-  const [form, setForm] = useState({ doctor_id:'', patient_name:'', patient_email:'', patient_phone:'', appointment_date:'', appointment_time:'', reason:'' })
+  const [form, setForm] = useState({ doctor_id: doctorIdFromQuery, patient_name:'', patient_email:'', patient_phone:'', appointment_date:'', appointment_time:'', reason:'' })
   const [msg, setMsg] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -16,9 +17,8 @@ export default function Appointments(){
   },[])
 
   useEffect(()=>{
-    const doctorId = searchParams.get('doctor')
-    if(doctorId) setForm(prev => ({ ...prev, doctor_id: doctorId }))
-  }, [searchParams])
+    if(doctorIdFromQuery) setForm(prev => ({ ...prev, doctor_id: doctorIdFromQuery }))
+  }, [doctorIdFromQuery])
 
   async function submit(e){
     e.preventDefault()

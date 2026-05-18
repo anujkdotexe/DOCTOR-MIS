@@ -7,7 +7,7 @@ function getInitialMode(search){
   return params.get('tab') === 'register' ? 'register' : 'login'
 }
 
-export default function Auth(){
+export default function Auth({ onAuthSuccess }){
   const location = useLocation()
   const navigate = useNavigate()
   const initialMode = useMemo(()=> getInitialMode(location.search), [location.search])
@@ -32,6 +32,7 @@ export default function Auth(){
     if(res?.success){
       localStorage.setItem('token', res.token)
       localStorage.setItem('user', JSON.stringify(res.user))
+      onAuthSuccess && onAuthSuccess(res.user)
       navigate(res.user?.role === 'admin' ? '/admin' : '/')
       return
     }
@@ -48,6 +49,7 @@ export default function Auth(){
     if(res?.success){
       localStorage.setItem('token', res.token)
       localStorage.setItem('user', JSON.stringify(res.user))
+      onAuthSuccess && onAuthSuccess(res.user)
       setSuccess('Account created successfully.')
       navigate(res.user?.role === 'admin' ? '/admin' : '/')
       return

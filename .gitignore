@@ -14,7 +14,8 @@ yarn.lock
 logs/
 *.log
 
-
+*.sql
+*.sqlite
 # dotenv environment variables
 .env
 .env.*
@@ -77,3 +78,5 @@ frontend/node_modules/
 .idea/
 *.iml
 backend/database/seed_admin.sql
+backend/database/seed.sql
+backend/database/seed.sql

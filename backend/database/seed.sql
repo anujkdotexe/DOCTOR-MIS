@@ -10,9 +10,9 @@ USE doctor_mis;
 --  USERS  (passwords are bcrypt hash of "Password@123")
 -- ============================================================
 INSERT INTO users (name, email, password_hash, role) VALUES
-('Admin User',     'admin@docfind.com',   '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-('Rahul Sharma',   'rahul@example.com',   '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user'),
-('Priya Nair',     'priya@example.com',   '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user');
+('Admin User',     'admin@docfind.com',   '$2a$10$uhOtyhK9wO2gRqKM7gFvvei80Ayi24ZeTt/u1AmBN.wmS4TA75RP.', 'admin'),
+('Rahul Sharma',   'rahul@example.com',   '$2a$10$uhOtyhK9wO2gRqKM7gFvvei80Ayi24ZeTt/u1AmBN.wmS4TA75RP.', 'user'),
+('Priya Nair',     'priya@example.com',   '$2a$10$uhOtyhK9wO2gRqKM7gFvvei80Ayi24ZeTt/u1AmBN.wmS4TA75RP.', 'user');
 
 -- ============================================================
 --  DOCTORS — 55 records
